@@ -95,7 +95,7 @@ The local API will now be listening seamlessly at `http://localhost`.
 
 ---
 
-## 📊 API Endpoints Reference
+## API Endpoints Reference
 
 | Endpoint | Allowed HTTP Methods | Description |
 | :--- | :--- | :--- |
