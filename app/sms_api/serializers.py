@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.sms_api import models
+from sms_api import models
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 User = get_user_model()
