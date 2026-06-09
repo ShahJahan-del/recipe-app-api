@@ -159,3 +159,35 @@ REST_FRAMEWORK = {
 SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
 }
+
+# ==============================================================================
+# AJOUTS POUR LE PROJET STUDENT MANAGEMENT SYSTEM (SMS)
+# ==============================================================================
+
+# 1. Ajout des dépendances de l'API et de ton application dans la configuration existante
+INSTALLED_APPS += [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'sms_api',
+]
+
+# 2. Configuration de Django REST Framework (Authentification JWT et Schéma Swagger)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# 3. Personnalisation de la documentation Swagger pour ton projet
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'School Management System API',
+    'DESCRIPTION': 'API de gestion scolaire avec authentification par Token, cloisonnement strict des rôles (Admin, Teacher, Student) et notifications e-mails automatisées.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,  # Conserve ce paramètre de l'infrastructure de base
+}
+
+# 4. Redirection des e-mails vers la console Docker (pour les notifications automatisées)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -38,3 +38,37 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT,
     )
+
+
+# ==============================================================================
+# AJOUTS POUR LES ROUTES DU PROJET STUDENT MANAGEMENT SYSTEM (SMS)
+# ==============================================================================
+
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.contrib.auth import get_user_model
+from django.urls import include
+
+# 1. Injection dynamique du rôle dans le modèle User actif de la production
+User = get_user_model()
+
+@property
+def get_user_role(self):
+    if self.is_superuser:
+        return 'ADMIN'
+    elif self.groups.filter(name='TEACHER').exists():
+        return 'TEACHER'
+    elif self.groups.filter(name='STUDENT').exists():
+        return 'STUDENT'
+    return None
+
+User.role = get_user_role
+
+# 2. Ajout de tes routes d'API et de connexion à la suite de la liste existante
+urlpatterns += [
+    # Routes pour le JWT (Authentification)
+    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Inclusion des routes de ton application d'école
+    path('api/', include('sms_api.urls')),
+]
