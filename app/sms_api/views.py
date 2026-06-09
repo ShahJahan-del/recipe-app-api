@@ -1,11 +1,14 @@
 from django.shortcuts import render
+from app.sms_api import models, permissions
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from sms_api import models, serializers, permissions
+from app.sms_api import serializers
 from django.core.mail import send_mail
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models import Max
 from rest_framework.exceptions import PermissionDenied # Import pour bloquer la modif d'email du prof
+
+User = get_user_model()
 
 # Create your views here.
 

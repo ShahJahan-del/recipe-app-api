@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from sms_api import views
+from app.sms_api import views
 from rest_framework.authtoken import views as token_views
 
 router = DefaultRouter()

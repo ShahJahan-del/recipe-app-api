@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from sms_api import models
-from django.contrib.auth.models import User, Group
+from app.sms_api import models
+from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
