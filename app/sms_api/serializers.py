@@ -70,10 +70,10 @@ class AdminUserCreationSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(required=False, allow_blank=True)
     last_name = serializers.CharField(required=False, allow_blank=True)
     role = serializers.SerializerMethodField()
-    # On simplifie role_input pour qu'il transmette la valeur brute directement
     role_input = serializers.ChoiceField(
         choices=(('ADMIN', 'Admin'), ('TEACHER', 'Teacher'), ('STUDENT', 'Student')),
-        write_only=True
+        write_only=True,
+        source='role'
     )
 
     class Meta:
@@ -86,8 +86,6 @@ class AdminUserCreationSerializer(serializers.ModelSerializer):
     def get_role(self, obj):
         if obj.is_superuser:
             return 'ADMIN'
-
-        # Import dynamique pour éviter les imports circulaires
         from sms_api.models import Teachers, Students
         if Teachers.objects.filter(email=obj.email).exists():
             return 'TEACHER'
@@ -96,39 +94,29 @@ class AdminUserCreationSerializer(serializers.ModelSerializer):
         return 'UNKNOWN'
 
     def create(self, validated_data):
-        # 1. On extrait le rôle demandé (par défaut STUDENT)
-        role_target = validated_data.pop('role_input', 'STUDENT')
+        role = validated_data.pop('role', 'STUDENT')
 
+        # Extraction des champs de l'interface d'origine
         username = validated_data.pop('username', '')
         first_name = validated_data.pop('first_name', '')
         last_name = validated_data.pop('last_name', '')
 
+        # Reconstruction intelligente du champ unique 'name' pour la BDD
         if first_name or last_name:
             validated_data['name'] = f"{first_name} {last_name}".strip()
         else:
             validated_data['name'] = username or validated_data.get('email', '').split('@')[0]
 
-        # 2. Création de l'utilisateur de base
+        # Création de l'utilisateur
         user = User.objects.create_user(**validated_data)
 
-        # 3. Application des rôles système et liaisons applicatives
-        if role_target == 'ADMIN':
+        # Attribution des droits selon le rôle scolaire
+        if role == 'ADMIN':
             user.is_staff = True
             user.is_superuser = True
         else:
             user.is_staff = False
             user.is_superuser = False
 
-            # IMPORTANT : Il faut créer l'entrée correspondante dans vos tables Teachers / Students
-            # pour que get_role() ne renvoie pas UNKNOWN au prochain GET !
-            from sms_api.models import Teachers, Students
-            if role_target == 'TEACHER':
-                Teachers.objects.get_or_create(email=user.email, defaults={'name': user.name})
-            elif role_target == 'STUDENT':
-                Students.objects.get_or_create(email=user.email, defaults={'name': user.name})
-
         user.save()
-
-        # On attache temporairement le rôle à l'objet pour que la vue puisse le lire facilement
-        user._context_role = role_target
         return user
