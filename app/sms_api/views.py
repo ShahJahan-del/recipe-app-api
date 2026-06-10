@@ -7,6 +7,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from django.db.models import Max
 from rest_framework.exceptions import PermissionDenied # Import pour bloquer la modif d'email du prof
+from django.db.models import Max
 
 User = get_user_model()
 
@@ -260,23 +261,26 @@ class AdminUserManagementViewSet(viewsets.ModelViewSet):
         role = self.request.data.get('role')
         email_saisi = self.request.data.get('email')
 
+        # Correction du nom du champ provenant du front/formulaire
+        role = self.request.data.get('role_input') or self.request.data.get('role')
+
+        # Dictionnaire pour stocker d'éventuelles surcharges lors du save()
+        save_kwargs = {}
+
         # SÉCURITÉ DE CORRESPONDANCE DES DONNÉES AVEC SUPABASE
-        # Avant de sauvegarder l'utilisateur Django, on vérifie s'il existe déjà dans Supabase
         if role == 'TEACHER':
             existing_profile = models.Teachers.objects.filter(email=email_saisi).first()
             if existing_profile:
-                # On force l'alignement des données : Django prend les valeurs exactes de Supabase
-                serializer.validated_data['id'] = existing_profile.teacher_id
-                serializer.validated_data['first_name'] = existing_profile.first_name
-                serializer.validated_data['last_name'] = existing_profile.last_name
+                # 🌟 Solution propre : on prépare les variables pour l'injection au moment du .save()
+                save_kwargs['id'] = existing_profile.teacher_id
 
         elif role == 'STUDENT':
             existing_profile = models.Students.objects.filter(email=email_saisi).first()
             if existing_profile:
-                # On force l'alignement des données : Django prend les valeurs exactes de Supabase
-                serializer.validated_data['id'] = existing_profile.student_id
-                serializer.validated_data['first_name'] = existing_profile.first_name
-                serializer.validated_data['last_name'] = existing_profile.last_name
+                save_kwargs['id'] = existing_profile.student_id
+
+        # 2. Sauvegarde de l'utilisateur Django (avec injection sécurisée de l'ID si existant)
+        user = serializer.save(**save_kwargs)
 
         # 2. Sauvegarde de l'utilisateur Django (Désormais 100% raccord avec Supabase)
         user = serializer.save()
