@@ -39,3 +39,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     objects = UserManager()
     USERNAME_FIELD = 'email'
+
+    @property
+    def first_name(self):
+        """ Extrait dynamiquement le prénom depuis le champ name"""
+        return self.name.split(' ')[0] if self.name else ""
+
+    @property
+    def last_name(self):
+        """ Extrait dynamiquement le nom depuis le champ name"""
+        if not self.name:
+            return ""
+        parts = self.name.split(' ')
+        return ' '.join(parts[1:]) if len(parts) > 1 else ""
