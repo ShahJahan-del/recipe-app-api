@@ -41,13 +41,18 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     @property
+    def username(self):
+        """Renvoie l'email ou la première partie de l'email comme identifiant si demandé"""
+        return self.email.split('@')[0] if self.email else ""
+
+    @property
     def first_name(self):
-        """ Extrait dynamiquement le prénom depuis le champ name"""
+        """Extrait dynamiquement le prénom depuis le champ name"""
         return self.name.split(' ')[0] if self.name else ""
 
     @property
     def last_name(self):
-        """ Extrait dynamiquement le nom depuis le champ name"""
+        """Extrait dynamiquement le nom depuis le champ name"""
         if not self.name:
             return ""
         parts = self.name.split(' ')
