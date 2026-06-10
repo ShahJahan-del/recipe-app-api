@@ -104,4 +104,4 @@ The local API will now be listening seamlessly at `http://localhost`.
 | `/api/students/` | `GET`, `POST`, `PUT`, `PATCH` | Student directory. Strict field locks applied to student self-updates. |
 | `/api/teachers/` | `GET`, `POST`, `PUT` | Teacher data. Modification of emails is forbidden. |
 | `/api/enrollments/` | `GET`, `POST`, `DELETE` | Handles class signups. Triggers administrative emails. |
-| `/api/admin-management/`| `GET`, `POST`, `DELETE` | Profile generator. Auto-links Django auth users to metadata profiles. |
+| `/api/users-admin/`| `GET`, `POST`, `DELETE` | Profile generator. Auto-links Django auth users to metadata profiles. |
