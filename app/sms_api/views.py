@@ -279,6 +279,10 @@ class AdminUserManagementViewSet(viewsets.ModelViewSet):
                 serializer.validated_data['last_name'] = existing_profile.last_name
 
         # 2. Sauvegarde de l'utilisateur Django (Désormais 100% raccord avec Supabase)
+        print("POST DATA =", self.request.data)
+        print("ROLE FROM POST =", self.request.data.get('role'))
+        print("ROLE_INPUT FROM POST =", self.request.data.get('role_input'))
+        print("VALIDATED DATA =", serializer.validated_data)
         user = serializer.save()
 
         # 3. CRÉATION AUTOMATIQUE SI LE PROFIL N'EXISTE PAS ENCORE
