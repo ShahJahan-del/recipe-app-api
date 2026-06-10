@@ -281,6 +281,11 @@ class AdminUserManagementViewSet(viewsets.ModelViewSet):
         # 2. Sauvegarde de l'utilisateur Django (Désormais 100% raccord avec Supabase)
         user = serializer.save()
 
+        # Récupération garantie du rôle pour l'e-mail
+        user_role = getattr(user, '_context_role', None)
+        if not user_role:
+            user_role = serializer.validated_data.get('role_input', 'STUDENT')
+
         # 3. CRÉATION AUTOMATIQUE SI LE PROFIL N'EXISTE PAS ENCORE
         if role == 'TEACHER':
             if not models.Teachers.objects.filter(email=user.email).exists():
