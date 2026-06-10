@@ -68,6 +68,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class StudentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StudentSerializer
+    lookup_field = 'student_id'
 
     def get_permissions(self):
         # L'admin peut gérer les profils, les profs et étudiants peuvent juste voir
@@ -130,6 +131,7 @@ class StudentViewSet(viewsets.ModelViewSet):
 
 class TeacherViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TeacherSerializer
+    lookup_field = 'teacher_id'
 
     # Seul l'admin peut modifier la liste globale des profs,
     # mais les utilisateurs connectés peuvent la consulter
@@ -316,4 +318,6 @@ class AdminUserManagementViewSet(viewsets.ModelViewSet):
             f" - Mot de passe : {raw_password}\n\n"
             f"Cordialement,\n L'administration."
         )
+        # Debug
+        print("=== [TEST DEBUGLOG] L'envoi de l'email va se déclencher maintenant ===")
         send_mail(subject, message, 'noreply@ecole.fr', [user.email], fail_silently=False)
