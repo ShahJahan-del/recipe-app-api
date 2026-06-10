@@ -77,7 +77,7 @@ class AdminUserCreationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # 🌟 Tes champs d'origine restent présents et intacts !
+        # Tes champs d'origine restent présents et intacts !
         fields = ('id', 'username', 'email', 'first_name', 'last_name', 'password', 'role', 'role_input')
         extra_kwargs = {
             'password': {'write_only': True, 'style': {'input_type': 'password'}}

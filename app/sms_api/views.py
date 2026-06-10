@@ -257,7 +257,7 @@ class AdminUserManagementViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # 1. Récupération des données saisies dans le formulaire d'administration
         raw_password = self.request.data.get('password')
-        role = self.request.data.get('role')
+        role = self.request.data.get('role_input')
         email_saisi = self.request.data.get('email')
 
         # SÉCURITÉ DE CORRESPONDANCE DES DONNÉES AVEC SUPABASE

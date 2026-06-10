@@ -1,5 +1,5 @@
 from django.contrib import admin
-from sms_api import models
+from app.sms_api import models
 
 # Register your models here.
 
