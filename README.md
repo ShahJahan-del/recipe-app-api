@@ -105,3 +105,39 @@ The local API will now be listening seamlessly at `http://localhost`.
 | `/api/teachers/` | `GET`, `POST`, `PUT` | Teacher data. Modification of emails is forbidden. |
 | `/api/enrollments/` | `GET`, `POST`, `DELETE` | Handles class signups. Triggers administrative emails. |
 | `/api/users-admin/`| `GET`, `POST`, `DELETE` | Profile generator. Auto-links Django auth users to metadata profiles. |
+
+---
+
+## Testing the API features
+
+### Setting up the Git Bash terminal
+
+1.  **Connect to the server:**
+    ```bash
+    ssh -i ~/.ssh/aws_id_rsa ec2-user@13.48.5.192
+    cd recipe-app-api
+    ```
+
+2.  **Start the logs:**
+    ```bash
+    docker-compose -f docker-compose-deploy.yml logs -f app
+    ```
+
+### Log in as ADMIN / TEACHER / STUDENT
+
+1.  **ADMIN:**
+    Go to the `ec2-13-48-5-192.eu-north-1.compute.amazonaws.com/admin` and log in using the credentials given above:
+
+2.  **TEACHER:**
+    Go to `ec2-13-48-5-192.eu-north-1.compute.amazonaws.com/api/login` and log in using the credentials given above.
+    Copy the access token.
+    Open the ModHeader Extension.
+    Fill the request header:
+    Authorization - Bearer Token
+
+3.  **STUDENT:**
+    The procedure is the same as for the teacher but with student credentials.
+
+### Navigating the endpoints
+
+See the API Endpoints Reference section.
