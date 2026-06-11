@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'drf_spectacular',
-    'chat',
+    'chat', #websockets
 ]
 
 MIDDLEWARE = [
@@ -78,8 +78,6 @@ TEMPLATES = [
 
 
 #WSGI_APPLICATION = 'app.wsgi.application' # systeme synchrone par defaut de Django
-ASGI_APPLICATION = 'app.asgi.application' # systeme asynchrone de Channels (Websockets)
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -202,11 +200,16 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # ==============================================================================
 
 # Websockets
+ASGI_APPLICATION = 'app.asgi.application' # systeme asynchrone de Channels (Websockets)
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0")],
-        },
+        #"BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND": "channels.layers.InMemoryChannelLayer", # works but doesn't use redis
+        #"CONFIG": {
+            #"hosts": [("redis", 6379)],
+            # Built-in channels_redis arguments to prevent long-polling freezes:
+            #"capacity": 1500,  # Increases channel message capacity
+            #"expiry": 10,      # Lowers data expiration window to force fast recycling
+        #},
     },
 }
