@@ -28,3 +28,4 @@ uwsgi>=2.0.19,<2.1
 # Websockets
 channels[daphne]==4.0.0
 channels_redis==4.1.0
+selenium>=4.0.0
