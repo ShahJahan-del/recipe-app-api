@@ -36,6 +36,7 @@ ALLOWED_HOSTS.extend(
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core',
     'drf_spectacular',
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -74,7 +76,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'app.wsgi.application'
+
+#WSGI_APPLICATION = 'app.wsgi.application' # systeme synchrone par defaut de Django
+ASGI_APPLICATION = 'app.asgi.application' # systeme asynchrone de Channels (Websockets)
 
 
 # Database
@@ -191,3 +195,18 @@ SPECTACULAR_SETTINGS = {
 
 # 4. Redirection des e-mails vers la console Docker (pour les notifications automatisées)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# ==============================================================================
+# AJOUTS POUR WEBSOCKETS
+# ==============================================================================
+
+# Websockets
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0")],
+        },
+    },
+}

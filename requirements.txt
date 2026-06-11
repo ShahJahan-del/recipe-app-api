@@ -24,3 +24,7 @@ psycopg2-binary==2.9.12
 # Serveur de production et gestion d'images (Garder ceux du déploiement)
 Pillow>=8.2.0,<8.3.0
 uwsgi>=2.0.19,<2.1
+
+# Websockets
+channels[daphne]==4.0.0
+channels_redis==4.1.0

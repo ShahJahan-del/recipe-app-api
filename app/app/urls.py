@@ -72,3 +72,12 @@ urlpatterns += [
     # Inclusion des routes de ton application d'école
     path('api/', include('sms_api.urls')),
 ]
+
+
+# ==============================================================================
+# AJOUTS POUR WEBSOCKETS
+# ==============================================================================
+
+urlpatterns += [
+    path("chat/", include("chat.urls")),
+]
